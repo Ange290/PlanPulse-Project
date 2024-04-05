@@ -1,8 +1,7 @@
 const TaskSchema = require('../models/task_model.js');
 
-TaskControllers ={
- 
-    createTask: async(req,res)=>{
+TaskControl={
+ createTask: async(req,res)=>{
         try {
             const newTask = await TaskSchema.create(req.body);
             res.status(201).json(newTask)
@@ -11,4 +10,4 @@ TaskControllers ={
         }
     }
 }
-module.exports= TaskControllers;
+module.exports= TaskControl;
