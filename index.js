@@ -1,8 +1,11 @@
+const dotenv = require("dotenv");
+dotenv.config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-dotenv.config();
+const router = require('./router/task_route.js');
+app.use(express.json())
+app.use("/api",router)
 const port = process.env.PORT
 const db = process.env.MONGOOSE_URL;
 mongoose.connect(db)

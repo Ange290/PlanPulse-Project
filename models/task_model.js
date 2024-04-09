@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const Task_Model = new mongoose.Schema({
     tittle:{
         type:String,
-        required: true
+        required: true,
+        unique:[true, "Tittle must be unique"]
     },
    description: String,
 
@@ -12,10 +13,11 @@ const Task_Model = new mongoose.Schema({
     enum:['TODO','IN PROGRESS','COMPLETED','LATE','OVERDUE'],
     default:'TODO'
    },
+   dueDate:{
    startDate:{
-    type:Date,
-    required: true
-   },
+     type:Date,
+    required: true,
+      },
    endDate:Date,
 
    startTime:{
@@ -29,7 +31,7 @@ const Task_Model = new mongoose.Schema({
    duration:{
     type:Number,
     default:0
-   }
+   }}
 });
 const TaskSchema= mongoose.model('Tasks', Task_Model)
 module.exports= TaskSchema;
