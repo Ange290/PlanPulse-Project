@@ -62,7 +62,35 @@ const TaskControl = {
         } catch (error) {
             res.status(500).json(error.message);
         }
+    },
+    getById: async(req, res,next) => {
+        try {
+            const id= req.params.id;
+             const get = await TaskSchema.findById(id);
+            res.status(200).json(get);
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    },
+    updateTask: async(req,res, next) => {
+        try {
+            const id= req.params.id;
+            const update = await TaskSchema.findByIdAndUpdate(id, req.body);
+            res.status(200).json(update);
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
+    }, 
+    deleteTask: async(req,res, next) => {
+        try {
+            const id= req.params.id;
+            const deleteTask = await TaskSchema.findByIdAndDelete(id);
+            res.status(200).json(deleteTask);
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
     }
+
 };
 
 module.exports = TaskControl;
