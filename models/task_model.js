@@ -16,22 +16,30 @@ const Task_Model = new mongoose.Schema({
    dueDate:{
    startDate:{
      type:Date,
-    required: true,
+    required: false,
       },
    endDate:Date,
 
    startTime:{
     type: String,
-    default:'12:00 AM'
+  required:false
    },
    endTime:{
     type:String,
-    default:'12:00 AM'
+    required:false
    },
    duration:{
     type:Number,
-    default:0
-   }}
+    required:false
+   },
+durationType:{
+    type:String,
+    required:false,
+    enum:{
+        values:["Minutes","Hours","Days","Weeks","Months"],
+        message:"{VALUE} is not  a valid duration type"
+    }
+}}
 });
 const TaskSchema= mongoose.model('Tasks', Task_Model)
 module.exports= TaskSchema;
