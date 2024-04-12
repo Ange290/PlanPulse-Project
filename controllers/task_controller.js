@@ -21,6 +21,9 @@ const TaskControl = {
             durationInSeconds = Math.floor(duration / 1000);
             durationInMinutes = Math.floor(durationInSeconds / 60);
             durationInHours = Math.floor(durationInMinutes / 60);
+            durationInDays = Math.floor(durationInHours / 24);
+            durationInWeeks = Math.floor(durationInDays / 7);
+            durationInMonths = Math.floor(durationInWeeks / 4);
         }
 
         req.body.dueDate.startTime = startTime;
@@ -33,34 +36,42 @@ const TaskControl = {
             req.body.dueDate.duration = durationInMinutes;
             req.body.dueDate.durationType ='Minutes';
         }
-        else{
+        else
+        if(durationInHours < 24){
             req.body.dueDate.duration = durationInHours;
             req.body.dueDate.durationType = 'Hours';
         }
-     
-      
+     else
+     if(durationInWeeks < 7){
+    req.body.dueDate.duration = durationInWeeks;
+    req.body.dueDate.durationType = 'Weeks'; 
+    }
+    else{
+        req.body.dueDate.duration = durationInMonths;
+        req.body.dueDate.durationType = 'Months';
+    }
      
         console.log(req.body.dueDate);
         next();
     } catch (error) {
-        res.status(500).json(error.message);
+       next(error);
     }
     },
 
-    create: async(req, res) => {
+    create: async(req, res,next) => {
         try {
             const newTask = await TaskSchema.create(req.body);
             res.status(201).json(newTask);
         } catch (error) {
-            res.status(500).json(error.message);
+          next(error);
         }
     },
-    getTask: async(req, res) => {
+    getTask: async(req, res,next) => {
         try {
             const get = await TaskSchema.find();
             res.status(200).json(get);
         } catch (error) {
-            res.status(500).json(error.message);
+          next(error);
         }
     },
     getById: async(req, res,next) => {
@@ -69,7 +80,8 @@ const TaskControl = {
              const get = await TaskSchema.findById(id);
             res.status(200).json(get);
         } catch (error) {
-            res.status(500).json(error.message);
+          
+            next(error);
         }
     },
     updateTask: async(req,res, next) => {
@@ -78,7 +90,7 @@ const TaskControl = {
             const update = await TaskSchema.findByIdAndUpdate(id, req.body);
             res.status(200).json(update);
         } catch (error) {
-            res.status(500).json(error.message);
+            next(error);
         }
     }, 
     deleteTask: async(req,res, next) => {
@@ -87,7 +99,7 @@ const TaskControl = {
             const deleteTask = await TaskSchema.findByIdAndDelete(id);
             res.status(200).json(deleteTask);
         } catch (error) {
-            res.status(500).json(error.message);
+          next(error);
         }
     }
 
