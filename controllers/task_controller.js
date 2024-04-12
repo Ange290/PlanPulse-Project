@@ -11,7 +11,7 @@ const TaskControl = {
         var durationInSeconds = 0;
         var durationInMinutes = 0;
         var durationInHours=0;
-
+      
           if(req.body.dueDate.startDate && req.body.dueDate.endDate){
           
             startTime = moment(req.body.dueDate.startDate).format('HH:mm:ss');
