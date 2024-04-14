@@ -1,5 +1,59 @@
 const TaskSchema = require('../models/task_model.js');
-const moment = require('moment');
+
+// const durationCalculator = (startTime, endTime) => {
+
+//     const durations = {
+//         duration: 0,
+//         durationType: ''
+//       };
+      
+//       var startDateAsNumber = new Date(startTime).getTime();
+//       var endDateAsNumber = new Date(endTime).getTime();
+//       var oneHour = 1000*60*60;
+//       var difference = endDateAsNumber - startDateAsNumber;
+//       var numberOfHours = difference/oneHour;
+    
+      
+//       if (numberOfHours < 1) {
+//         let numberOfMinutes = Math.floor(difference/(1000*60));
+//         durations.duration = numberOfMinutes;
+//         durations.durationType = "Minutes"; 
+//       } else if (numberOfHours >= 1 && numberOfHours < 24) {
+//         durations.duration = numberOfHours;
+//         durations.durationType = "Hours"
+//       } else if (numberOfHours >= 24 && numberOfHours < 168) {
+//         durations.duration = numberOfHours/24;
+//         durations.durationType = "Days"
+//       }
+//       return durations;
+//     }
+function durationCalculator(startDate, endDate) {
+    const durations = {
+        duration: 0,
+        durationType: ''
+    };
+
+    var startDateAsNumber = new Date(startDate).getTime();
+    var endDateAsNumber = new Date(endDate).getTime();
+    var difference = endDateAsNumber - startDateAsNumber;
+    var oneHour = 1000 * 60 * 60;
+    var numberOfHours = difference / oneHour;
+
+    if (numberOfHours < 1) {
+        let numberOfMinutes = Math.floor(difference / (1000 * 60));
+        durations.duration = numberOfMinutes;
+        durations.durationType = "Minutes";
+    } else if (numberOfHours >= 1 && numberOfHours < 24) {
+        durations.duration = Math.floor(numberOfHours);
+        durations.durationType = "Hours";
+    } else if (numberOfHours >= 24 && numberOfHours < 168) {
+        durations.duration = Math.floor(numberOfHours / 24);
+        durations.durationType = "Days";
+    }
+
+    return durations;
+}
+
 const TaskControl = {
 
     setTime: async(req, res, next) => {
@@ -7,49 +61,21 @@ const TaskControl = {
             console.log(req.body.dueDate);
         var startTime = "";
         var endTime = "";
-        var duration = 0;
-        var durationInSeconds = 0;
-        var durationInMinutes = 0;
-        var durationInHours=0;
-      
-          if(req.body.dueDate.startDate && req.body.dueDate.endDate){
-          
-            startTime = moment(req.body.dueDate.startDate).format('HH:mm:ss');
-            endTime = moment(req.body.dueDate.endDate).format('HH:mm:ss');
 
-            duration = moment(req.body.dueDate.endDate).diff(moment(req.body.dueDate.startDate));
-            durationInSeconds = Math.floor(duration / 1000);
-            durationInMinutes = Math.floor(durationInSeconds / 60);
-            durationInHours = Math.floor(durationInMinutes / 60);
-            durationInDays = Math.floor(durationInHours / 24);
-            durationInWeeks = Math.floor(durationInDays / 7);
-            durationInMonths = Math.floor(durationInWeeks / 4);
+          if(req.body.dueDate.startDate ){
+           startTime = new Date(req.body.dueDate.startDate.slice(0,-1)).toLocaleTimeString();
+           //startTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          }
+            if(req.body.dueDate.endDate){
+            endTime = new Date(req.body.dueDate.endDate.slice(0,-1)).toLocaleTimeString();
+            //endTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
-
-        req.body.dueDate.startTime = startTime;
-        req.body.dueDate.endTime = endTime;
-     if (durationInSeconds < 60){
-        req.body.dueDate.duration = durationInSeconds;
-        req.body.dueDate.durationType = 'Seconds';
-     }else
-        if (durationInMinutes < 60){
-            req.body.dueDate.duration = durationInMinutes;
-            req.body.dueDate.durationType ='Minutes';
-        }
-        else
-        if(durationInHours < 24){
-            req.body.dueDate.duration = durationInHours;
-            req.body.dueDate.durationType = 'Hours';
-        }
-     else
-     if(durationInWeeks < 7){
-    req.body.dueDate.duration = durationInWeeks;
-    req.body.dueDate.durationType = 'Weeks'; 
-    }
-    else{
-        req.body.dueDate.duration = durationInMonths;
-        req.body.dueDate.durationType = 'Months';
-    }
+req.body.dueDate.startTime= startTime;
+req.body.dueDate.endTime= endTime;
+ const durations = durationCalculator(req.body.dueDate.startDate, req.body.dueDate.endDate)
+ req.body.dueDate.duration= durations.duration;
+ req.body.dueDate.durationType= durations.durationType;
+   
      
         console.log(req.body.dueDate);
         next();

@@ -8,7 +8,7 @@ const ErrorHandler = require('./middlewares/errorHandler.js')
 app.use(express.json())
 app.use("/api",router);
 
-app.use(ErrorHandler);
+//app.use(ErrorHandler);
 const port = process.env.PORT
 const db = process.env.MONGOOSE_URL;
 mongoose.connect(db)

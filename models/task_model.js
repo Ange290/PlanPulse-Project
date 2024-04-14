@@ -36,10 +36,16 @@ durationType:{
     type:String,
     required:false,
     enum:{
-        values:["Minutes","Hours","Days","Weeks","Months"],
+        values:["Seconds","Minutes","Hours","Days","Weeks","Months"],
         message:"{VALUE} is not  a valid duration type"
     }
 }}
+});
+Task_Model.path("tittle").validate({
+    validator:(value)=>{
+        return value.length;
+    },
+    message:"Title must be less than or equal to 50 characters"
 });
 const TaskSchema= mongoose.model('Tasks', Task_Model)
 module.exports= TaskSchema;
