@@ -49,20 +49,18 @@ Task_Model.pre('save', function(next){
             return next(new Error("End Date must be greater than Start Date"));
         }
     }
+    next();
+});
+Task_Model.pre('save', function(next){
     if(this.dueDate.startTime && this.dueDate.endTime){
-const startDate = new Date(this.dueDate.startDate);
-const startTime = new Date(startDate.toDateString() + ' ' + this.dueDate.startTime);
-const endTime = new Date(endDate.toDateString() + ' ' + this.dueDate.endTime);
-if(endTime < startTime){
+const startTime = new Date(this.dueDate.startTime);
+const endTime = new Date(this.dueDate.endTime);
+if(startTime > endTime){
      return next(new Error("End Time must be greater than Start Time"));
     }
 }
+next();
 });
-Task_Model.path("tittle").validate({
-    validator:(value)=>{
-        return value.length;
-    },
-    message:"Title must be less than or equal to 50 characters"
-});
+
 const TaskSchema= mongoose.model('Tasks', Task_Model)
 module.exports= TaskSchema;

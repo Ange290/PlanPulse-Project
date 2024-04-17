@@ -1,4 +1,4 @@
-const TaskSchema = require('../models/task_model.js');
+const TaskSchema = require('../src/models/task_model.js');
 
 // const durationCalculator = (startTime, endTime) => {
 
