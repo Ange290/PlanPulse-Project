@@ -1,3 +1,5 @@
+
+
 const ErrorHandler =(err,req,res,next) => {
     console.log("Middleware Error Handling");
      const errStatus=err.statusCode || 500;
@@ -8,5 +10,5 @@ const ErrorHandler =(err,req,res,next) => {
         message:errMessage,
         stack: Process.env.NODE_ENV === "development" ? err.stack:{}
      })
-}
+};
 module.exports = ErrorHandler;

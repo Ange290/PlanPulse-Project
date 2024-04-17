@@ -3,20 +3,23 @@ dotenv.config();
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const router = require('./router/task_route.js');
-const ErrorHandler = require('./middlewares/errorHandler.js')
+const router = require('./src/router/task_route.js');
+const ErrorHandler = require('./src/middlewares/errorHandler.js');
+const config = require('./src/configs/index.js');
 app.use(express.json())
 app.use("/api",router);
 
 //app.use(ErrorHandler);
-const port = process.env.PORT
+
 const db = process.env.MONGOOSE_URL;
 mongoose.connect(db)
 .then(()=>{
-    app.listen(port,()=>{
-        console.log(`Server is live on port ${port}!!`);
-    })
+  console.log("DB connection established")
 })
 .catch((err)=>{
    console.error(err);
 })
+app.listen(config.PORT,()=>{
+    console.log(`Server is live on port ${config.PORT}!!`);
+})
+app.use(ErrorHandler);

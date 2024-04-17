@@ -51,15 +51,20 @@ Task_Model.pre('save', function(next){
     }
     next();
 });
-Task_Model.pre('save', function(next){
-    if(this.dueDate.startTime && this.dueDate.endTime){
-const startTime = new Date(this.dueDate.startTime);
-const endTime = new Date(this.dueDate.endTime);
-if(startTime > endTime){
-     return next(new Error("End Time must be greater than Start Time"));
+/**
+ * Checks if the end time of a task is greater than the start time.
+ * If the end time is less than the start time, an error is thrown.
+ * @param {function} next - A function to be called after the check is complete.
+ */
+Task_Model.pre('save', function(next) {
+  if (this.dueDate.startTime && this.dueDate.endTime) {
+    const startTime = new Date(this.dueDate.startTime);
+    const endTime = new Date(this.dueDate.endTime);
+    if (startTime > endTime) {
+      return next(new Error('End Time must be greater than Start Time'));
     }
-}
-next();
+  }
+  next();
 });
 
 const TaskSchema= mongoose.model('Tasks', Task_Model)
